@@ -1,7 +1,7 @@
 package com.fiap.techchallenge.productApi.presentation.controllers;
 
 import com.fiap.techchallenge.productApi.domain.exceptions.BaseHttpException;
-import com.fiap.techChallenge.presentation.dtos.ErrorResponseDto;
+import com.fiap.techchallenge.productApi.presentation.dtos.ErrorResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

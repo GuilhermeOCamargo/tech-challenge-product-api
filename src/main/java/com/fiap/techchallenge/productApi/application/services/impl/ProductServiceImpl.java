@@ -2,65 +2,56 @@ package com.fiap.techchallenge.productApi.application.services.impl;
 
 import com.fiap.techchallenge.productApi.application.services.ProductService;
 import com.fiap.techchallenge.productApi.domain.Product;
+import com.fiap.techchallenge.productApi.domain.exceptions.InvalidDataException;
 import com.fiap.techchallenge.productApi.domain.exceptions.NotFoundException;
 import com.fiap.techchallenge.productApi.gateway.entity.ProductEntity;
 import com.fiap.techchallenge.productApi.gateway.repository.ProductRepository;
 import com.fiap.techchallenge.productApi.util.ConstantsUtil;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
 
     @Override
-    public Product saveProduct(Product product) {
+    public Product save(Product product) {
         return productRepository.save(new ProductEntity(product)).toDomain();
     }
 
     @Override
-    public Product updateProduct(Product product) {
-        return productRepository.save(new ProductEntity(product)).toDomain();
+    public Product update(Product product) {
+        if(isNull(product.id()))
+            throw new InvalidDataException(ConstantsUtil.INVALID_ID);
+        getProductById(product.id());
+        return save(product);
     }
 
     @Override
     public Product getProductById(Long id) {
-        Optional<ProductEntity> productEntity = productRepository.findById(id);
-        return productEntity.isPresent() ? productEntity.get().toDomain() : null;
+        return productRepository.findById(id)
+                .map(ProductEntity::toDomain)
+                .orElseThrow(() -> new NotFoundException(ConstantsUtil.PRODUCT_NOT_FOUND));
     }
 
     @Override
     public List<Product> getAllProducts(String category) {
+        List<ProductEntity> entityList = nonNull(category) ?
+                productRepository.findByCategory(category) : productRepository.findAll();
 
-        if (category != null) {
-            return getProductsByCategory(category);
-        }
-
-        List<ProductEntity> productEntityList = productRepository.findAll();
-
-        List<Product> products = productEntityList.stream()
-                .map(p -> p.toDomain())
+        if(entityList.isEmpty())
+            throw new NotFoundException(ConstantsUtil.PRODUCT_LIST_NOT_FOUND);
+        return entityList.stream()
+                .map(ProductEntity::toDomain)
                 .collect(Collectors.toList());
-
-        return products;
-    }
-
-    private List<Product> getProductsByCategory(String category) {
-        List<ProductEntity> productListByCategory = productRepository.findByCategory(category);
-
-        List<Product> products = productListByCategory.stream()
-                .map(p -> p.toDomain())
-                .collect(Collectors.toList());
-
-        return products;
     }
 
     @Override

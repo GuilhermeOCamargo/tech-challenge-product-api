@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/products")
 @Tag(name = "Produtos", description = "Operações para gerenciamento de produtos")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductUseCases productUseCases;
@@ -91,7 +91,7 @@ public class ProductController {
     })
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public ResponseEntity<?> getProductById(@Valid @PathVariable Long id) {
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
         ProductDto productDto = productUseCases.getProductById(id);
         return ResponseEntity.status(OK).body(productDto);
     }
@@ -110,7 +110,7 @@ public class ProductController {
     })
     @GetMapping
     @ResponseStatus(OK)
-    public ResponseEntity<?> getAllProducts(@Valid @RequestParam(value = "category", required = false) String category) {
+    public ResponseEntity<?> getAllProducts(@RequestParam(value = "category", required = false) String category) {
         List<ProductDto> productDtos = productUseCases.getAllProducts(category);
         return ResponseEntity.status(OK).body(productDtos);
     }
@@ -129,7 +129,7 @@ public class ProductController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public ResponseEntity<?> deleteProduct(@Valid @PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productUseCases.deleteProduct(id);
         return ResponseEntity.status(NO_CONTENT).body(null);
     }
