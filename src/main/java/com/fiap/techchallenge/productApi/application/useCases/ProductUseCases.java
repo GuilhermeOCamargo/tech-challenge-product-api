@@ -5,20 +5,24 @@ import com.fiap.techchallenge.productApi.application.services.ProductService;
 import com.fiap.techchallenge.productApi.domain.Product;
 import com.fiap.techchallenge.productApi.domain.exceptions.*;
 import com.fiap.techchallenge.productApi.presentation.dtos.ProductDto;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductUseCases {
 
     private final ProductService productService;
 
     public ProductDto saveProduct(ProductDto productDto) {
-        return ProductDto.of(productService.save(productDto.toDomain()));
+        try {
+            return ProductDto.of(productService.save(productDto.toDomain()));
+        } catch (InvalidDataException e) {
+            throw new DataInputException(e.getMessage());
+        }
     }
 
     public ProductDto updateProduct(ProductDto productDto) {

@@ -1,61 +1,30 @@
-#
-#spring:
-#  profiles:
-#    default: local
-#---
-#
-#spring:
-#  application:
-#    name: tech-challenge-app
-#  config:
-#    activate:
-#      on-profile: prd
-#  datasource:
-#    driver-class-name: org.mariadb.jdbc.Driver
-#  jpa:
-#    database-platform: org.hibernate.dialect.MariaDB103Dialect
-#    hibernate:
-#      ddl-auto: update
-#
-#server:
-#  servlet:
-#    context-path: /tech-challenge
-#  port: 8080
-#---
-#
-#spring:
-#  application:
-#    name: tech-challenge-app
-#  config:
-#    activate:
-#      on-profile: dev
-#  datasource:
-#    url: jdbc:mariadb://localhost:3306/tech_challenge
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    username: application_user
-#    password: SENHA123
-#  jpa:
-#    database-platform: org.hibernate.dialect.MariaDB103Dialect
-#    hibernate:
-#      ddl-auto: update
-#  h2:
-#    console:
-#      enabled: true
-#
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: ""
-#
-#server:
-#  servlet:
-#    context-path: /tech-challenge
-#  port: 8080
-#
-#springdoc:
-#  swagger-ui:
-#    path: /api-doc.html
+
+spring:
+  profiles:
+    default: local
+---
+
+spring:
+  application:
+    name: tech-challenge-app
+  config:
+    activate:
+      on-profile: prd
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+
+server:
+  servlet:
+    context-path: /tech-challenge
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /api-doc.html
 ---
 spring:
   application:

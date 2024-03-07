@@ -1,0 +1,31 @@
+version: '2'
+services:
+
+  database:
+    container_name: tech_challenge_db
+    build:
+      context: database
+      dockerfile: Dockerfile
+    image: tech_challenge_db:latest
+    ports:
+      - 3306:3306
+    networks:
+      - app_network
+  application:
+    container_name: tech_challenge_application
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tech_challenge_application:latest
+    ports:
+      - 8080:8080
+    networks:
+      - app_network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://tech_challenge_db:3306/tech_challenge_product
+      - SPRING_DATASOURCE_USERNAME=application_user
+      - SPRING_DATASOURCE_PASSWORD=SENHA123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+networks:
+  app_network:
+    driver: bridge
