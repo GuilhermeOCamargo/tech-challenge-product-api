@@ -24,7 +24,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        return productRepository.save(new ProductEntity(product)).toDomain();
+        var entity = new ProductEntity(product);
+        entity.setId(null);
+        return productRepository.save(entity).toDomain();
     }
 
     @Override
@@ -32,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
         if(isNull(product.id()))
             throw new InvalidDataException(ConstantsUtil.INVALID_ID);
         getProductById(product.id());
-        return save(product);
+        return productRepository.save(new ProductEntity(product)).toDomain();
     }
 
     @Override

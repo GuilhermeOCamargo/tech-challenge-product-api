@@ -12,6 +12,8 @@ spring:
       on-profile: prd
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
+    username: application_user
+    password: "SENHA123"
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
@@ -19,7 +21,7 @@ spring:
 
 server:
   servlet:
-    context-path: /tech-challenge
+    context-path: /tech-challenge-product
   port: 8080
 
 springdoc:
@@ -47,7 +49,7 @@ spring:
 
 server:
   servlet:
-    context-path: /tech-challenge
+    context-path: /tech-challenge-product
   port: 8080
 
 springdoc:

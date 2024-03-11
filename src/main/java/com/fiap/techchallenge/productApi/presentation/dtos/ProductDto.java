@@ -30,6 +30,7 @@ public class ProductDto {
 
     public Product toDomain() {
         return Product.builder()
+                .id(this.id)
                 .category(this.getCategory())
                 .price(this.getPrice())
                 .description(this.getDescription())
