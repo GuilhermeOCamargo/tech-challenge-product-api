@@ -30,3 +30,7 @@ O dockerfile irá configurar a senha do usuário root e também irá copiar o ar
 No arquivo **setup.sql** estão as configurações básicas necessárias para a aplicação conectar no banco de dados. Ao executar o arquivo, será criado a database utilizada pela aplicação, o usuário/senha que a aplicação utilizará para acessar o banco e as permissões necessárias para que o usuário acesse a database da aplicação.
 
 Para rodar o container, basta executar o comando `docker run -d -p 3606:3606 --name <NOME_DO_CONTAINER> <TAG_DA_IMAGEM>`.
+
+### Imagens no dockerhub
+**Aplicacão**: docker pull gcamargo1997/tech-challenge-product-api:latest
+**Banco de dados**: docker pull gcamargo1997/tech-challenge-product-db:latest

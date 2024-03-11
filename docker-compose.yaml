@@ -2,21 +2,21 @@ version: '2'
 services:
 
   database:
-    container_name: tech_challenge_product_db
+    container_name: tech-challenge-product-db
     build:
       context: database
       dockerfile: Dockerfile
-    image: tech_challenge_product_db:latest
+    image: tech-challenge-product-db:latest
     ports:
       - "3306:3306"
     networks:
       - app_network
   application:
-    container_name: tech_challenge_product_api
+    container_name: tech-challenge-product-api
     build:
       context: .
       dockerfile: Dockerfile
-    image: tech_challenge_product_api:latest
+    image: tech-challenge-product-api:latest
     ports:
       - "8080:8080"
     networks:
