@@ -5,6 +5,9 @@ spring:
 ---
 
 spring:
+#  mvc:
+#    servlet:
+#      path: /tech-challenge-product
   application:
     name: tech-challenge-app
   config:
@@ -14,20 +17,37 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: application_user
     password: "SENHA123"
+    url: jdbc:mariadb://localhost:3306/tech_challenge_product
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8091/realms/tech_challenge
+          jwk-set-uri: http://localhost:8091/realms/tech_challenge/.well-known/openid-configuration
+          public-key-location: http://localhost:8091/realms/tech_challenge/.well-known/openid-configuration
+      client:
+        registration:
+          keycloak:
+            client-id: web-app
+            authorization-grant-type: password
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8091/realms/tech_challenge
+            user-name-attribute: preferred_username
 
 server:
-  servlet:
-    context-path: /tech-challenge-product
-  port: 8080
+  port: 8081
 
 springdoc:
   swagger-ui:
-    path: /api-doc.html
+    path: /tech-challenge-product/api-doc.html
 ---
+
 spring:
   application:
     name: tech-challenge-app
