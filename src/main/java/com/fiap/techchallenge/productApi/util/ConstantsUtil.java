@@ -11,6 +11,9 @@ public class ConstantsUtil {
     public final String INVALID_DESCRIPTION = "Descricão inválida";
     public final String INVALID_CATEGORY = "Categoria inválida";
     public final String INVALID_PRICE ="Preco inválido";
-
     public final String CONTEXT_PATH = "/tech-challenge-product";
+    public static final String REALM_ACCESS_CLAIM = "realm_access";
+    public static final String ROLES_CLAIM = "roles";
+    public static final String GROUPS = "groups";
+
 }

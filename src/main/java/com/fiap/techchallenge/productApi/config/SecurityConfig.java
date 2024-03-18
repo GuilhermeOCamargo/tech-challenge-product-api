@@ -6,7 +6,7 @@ import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,18 +31,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.fiap.techchallenge.productApi.util.ConstantsUtil.*;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@EnableGlobalAuthentication
 //@Profile("!local")
 public class SecurityConfig {
 
     @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
     private String issuer_url;
-    private static final String GROUPS = "groups";
-    private static final String REALM_ACCESS_CLAIM = "realm_access";
-    private static final String ROLES_CLAIM = "roles";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -68,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher( HttpMethod.GET, ConstantsUtil.CONTEXT_PATH + "/products**")).permitAll()
                         .requestMatchers(antMatcher("/**")).authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults())
+                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter()))
                 )
                 .build();
     }
@@ -95,8 +94,6 @@ public class SecurityConfig {
                 var oidcUserAuthority = (OidcUserAuthority) authority;
                 var userInfo = oidcUserAuthority.getUserInfo();
 
-                // Tokens can be configured to return roles under
-                // Groups or REALM ACCESS hence have to check both
                 if (userInfo.hasClaim(REALM_ACCESS_CLAIM)) {
                     var realmAccess = userInfo.getClaimAsMap(REALM_ACCESS_CLAIM);
                     var roles = (Collection<String>) realmAccess.get(ROLES_CLAIM);
@@ -122,7 +119,7 @@ public class SecurityConfig {
     }
 
     private Collection<SimpleGrantedAuthority> generateAuthoritiesFromClaim(Collection<String> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_".concat(role))).toList();
+        return roles.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Bean

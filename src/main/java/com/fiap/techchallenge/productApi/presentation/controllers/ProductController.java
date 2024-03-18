@@ -3,7 +3,9 @@ package com.fiap.techchallenge.productApi.presentation.controllers;
 import com.fiap.techchallenge.productApi.application.useCases.ProductUseCases;
 import com.fiap.techchallenge.productApi.presentation.dtos.ErrorResponseDto;
 import com.fiap.techchallenge.productApi.presentation.dtos.ProductDto;
+import com.fiap.techchallenge.productApi.util.ConstantsUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +22,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/tech-challenge-product/products")
+@RequestMapping(ConstantsUtil.CONTEXT_PATH + "/products")
 @Tag(name = "Produtos", description = "Operações para gerenciamento de produtos")
 @RequiredArgsConstructor
 public class ProductController {
@@ -32,15 +34,25 @@ public class ProductController {
             @ApiResponse(responseCode = "201", description = "Produto cadastrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProductDto.class))
-                    }),
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
+                    }
+            ),
             @ApiResponse(responseCode = "409", description = "Produto já cadastrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             ),
             @ApiResponse(responseCode = "422", description = "Dados inválidos para o cadastro do produto",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             )
     })
@@ -56,21 +68,31 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Produto Alterado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProductDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             ),
             @ApiResponse(responseCode = "422", description = "Dados inválidos para o cadastro do produto",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             )
     })
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(OK)
-    public ResponseEntity<?> updateProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
+        productDto.setId(id);
         ProductDto updatedProductDto = productUseCases.updateProduct(productDto);
         return ResponseEntity.status(OK).body(updatedProductDto);
     }
@@ -80,16 +102,22 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Produto encontrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProductDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             )
     })
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+    public ResponseEntity<?> getProductById(@PathVariable("id") Long id) {
         ProductDto productDto = productUseCases.getProductById(id);
         return ResponseEntity.status(OK).body(productDto);
     }
@@ -118,16 +146,22 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Produtos encontrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ProductDto.class)))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }),
             @ApiResponse(responseCode = "404", description = "Produtos não encontrado",
                     content = {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDto.class))
+                    },
+                    headers = {
+                            @Header(name = "Authorization", required = true)
                     }
             )
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
         productUseCases.deleteProduct(id);
         return ResponseEntity.status(NO_CONTENT).body(null);
     }

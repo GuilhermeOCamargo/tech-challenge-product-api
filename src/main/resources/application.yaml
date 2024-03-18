@@ -33,7 +33,7 @@ spring:
         registration:
           keycloak:
             client-id: web-app
-            authorization-grant-type: password
+            authorization-grant-type: resource_owner
             scope: openid
         provider:
           keycloak:
